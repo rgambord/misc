@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+#
+# This a simple CPU stress tester that loads all CPUs with busy wait,
+# and continuously prints the core temperature.
+# 
+
+from multiprocessing import Pool
+from multiprocessing import cpu_count
+import psutil
+
+
+def f(x):
+  try:
+    if x == 0:
+      while True:
+        ct = psutil.sensors_temperatures()['coretemp'][0].current
+        print("\rCore temp: {}".format(ct), end='')
+    while True:
+      x*x
+  except:
+    pass
+
+cpus = cpu_count()
+pool = Pool(cpus)
+
+try:
+  pool.map(f, range(cpus))
+except:
+  print()
